@@ -1,0 +1,676 @@
+				GraalVM
+.....................................................................................
+
+What is Java?
+ Java Technology which offers langugage,tools,platform to build enterprise distributed server side and also mobile ,desktop apps.
+
+Java Technology offers java programming language which is object oriented,functional style language.
+
+If you take any programming langugage, you need to write code,compile,run.
+
+java offers compiler to compile source into "byte" code which is platform netural code.
+
+Byte code is executed on "Runtime" which is called "Jvm".
+....................................................................................
+What is Grallvm?
+   GrallVM is runtime to run java application generally.
+   Already we have jvm to run java apps, then why we need another runtime.
+
+Compilers:
+  There are two types of compiler
+
+1.Source compiler  - javac
+    which converts source code into byte code.
+
+2.Runtime compiler 
+    Since java is interpreted, which is very slow basically. in order to boost interpreter inside JVM there is technology introduced called "runtime compiler"
+which is called "JIT"
+
+We have so many JVMs
+ Oracle(SUN) - HotSpot
+
+GraalVM is abstraction on the top of "HOT Spot" JVM
+.....................................................................................
+..............................................................................................
+				 JIT Compilers
+
+JIT Compilers
+A JIT compiler compiles bytecode to native code for frequently executed sections. These sections are called "hotspots", hence the name "Hotspot JVM". As a result, Java can run with similar performance to a fully compiled language. 
+
+Let's look at the two types of JIT compilers available in the JVM.
+
+JDK has two folders 
+
+1.client folder -  In order to run simple java apps
+2.server folder -  In order to run enterprise java apps
+
+
+1.C1 Compiler
+2.C2 Compiler
+
+1.client folder -  contains c1 compiler
+2.server folder -  contains c2 compiler
+
+
+Java 6,7, 8 apps can be executed using either c1 compiler or c2 compiler
+
+c1 compilers are not fully optimitized compiler, so name suggests , very usefull for running core java apps.
+
+c2 compilers are fully optimitized compiler , so name suggests, very usefull for running server apps
+
+java -client App
+
+java -server App
+
+
+
+C1 – Client Complier
+...................."
+   The client compiler, also called C1, is a type of a JIT compiler optimized for "faster start-up time". It tries to optimize and compile the code as soon as possible.
+
+Historically, we used C1 for short-lived applications and applications where start-up time was an important non-functional requirement. Prior to Java 8, we had to specify the -client flag to use the C1 compiler. However, if we use Java 8 or higher, this flag will have no effect.
+
+only for java 7 .
+ java -client  Hello --> JVM selects C1 as JIT Compiler
+
+C2 – Server Complier:
+....................
+
+  The server compiler, also called C2, is a type of a JIT compiler optimized for "better overall performance". C2 observes and analyzes the code over a longer period of time compared to C1. This allows C2 to make better optimizations in the compiled code.
+
+Historically, we used C2 for long-running server-side applications. Prior to Java 8, we had to specify the -server flag to use the C2 compiler. However, this flag will have no effect in Java 8 or higher.
+....................................................................................
+			   Java 9 onwards and New JIT Compilers
+....................................................................................
+
+We should note that the "Graal JIT compiler is also available since Java 10", as an alternative to C2. Unlike C2, Graal can run in both just-in-time and ahead-of-time compilation modes to produce native code.
+
+....................................................................................
+				 Graal Compiler
+.....................................................................................
+What is Graal?
+ Graal is just a Compiler,JVM Just In Time Compiler(JIT)
+ Graal replaces old "C2" Compiler
+ Developed by Oracle
+
+Java Standards:
+ =>JCP
+ =>JEP
+JEP 243: Java-Level JVM Compiler Interface
+...........................................
+
+https://openjdk.java.net/jeps/243
+
+Develop a Java based JVM compiler interface (JVMCI) enabling a compiler written in Java to be used by the JVM as a dynamic compiler.
+
+Goals:
+ To plug in any  JIT Compiler based on JVMCI spec.
+
+In future , any body can develop compilers for JVM.
+
+The "Graal" is the first implementation compiler based on JVMCI.
+
+The Graal compiler is written by "Oracle"
+....................................................................................
+
+if you are using JDK 11 on wards, Graal compiler has been shiped, but you have to select that you want to use graal compiler.
+....................................................................................
+			aot -Ahead of Compilation
+....................................................................................
+java code is interpretered , compiled into native code  by jit compiler(c1, c2/Graal)
+during "Runtime".
+Before runtime, still we can optimize the code by using "AOT" compiler...
+
+AOT itself is runtime compiler but , which compiles code before lanuching the JVM.
+
+  Bytecode----aot----optimize the code---lanuch jvm---JIT starts executing... 
+
+What is Graalvm?
+
+GraalVM is umberla Term which basically consist of three technology
+
+1.Graal is JIT Compiler
+2.Truffle Framework -GraalVM’s language implementation framework
+3.Native Image – a technology to compile an application ahead-of-time into a native executable.
+
+AOT - Ahead of Compilation. - JEP 295
+ Compile Java classes to native code prior to launching the virtual machine.
+Improve the start-up time of both small and large Java applications, with at most a limited impact on peak performance.
+
+
+GraalVM 
+
+GraalVM compiles your Java applications ahead of time into "standalone binaries."
+These binaries are smaller, start up to 100x faster, provide peak performance with no warmup, and use less memory and CPU than applications running on a Java Virtual Machine (JVM).
+
+GraalVM reduces the attack surface of your application. It excludes unused classes, methods, and fields from the application binary. It restricts reflection and other dynamic Java language features to build time only. It does not load any unknown code at run time.
+
+Popular microservices frameworks such as Spring Boot, Micronaut, Helidon, and Quarkus, and cloud platforms such as Oracle Cloud Infrastructure, Amazon Web Services, Google Cloud Platform, and Microsoft Azure all support GraalVM.
+
+With profile-guided optimization and the G1 (Garbage-First) garbage collector, you can get lower latency and on-par or better peak performance and throughput compared to applications running on a Java Virtual Machine (JVM).
+
+....................................................................................
+				GraalVM Setup
+....................................................................................
+Graal can be setup on any os but linux or mac is better choice, windows not better choice.
+
+
+Linux:
+.....
+1.https://www.graalvm.org/downloads/#
+ Select either 17 or 20 jdk version
+
+2.tar -xzf graalvm-jdk-17_linux-x64_bin.tar.gz
+
+3.After extracting ,
+graalvm-jdk-17.0.7+8.1
+
+4.Add this into PATH env variable
+ export PATH=/path/to/<graalvm>/bin:$PATH
+
+export PATH=/home/subu/graalvm-jdk-17.0.7+8.1/bin:$PATH
+
+5.Add JAVA_HOME env variable 
+
+ export JAVA_HOME=/home/subu/graalvm-jdk-17.0.7+8.1
+
+6.To confirm that the installation was successful, run
+subu@LAPTOP-R2TGGFDL:~$ java --version
+java 17.0.7 2023-04-18 LTS
+Java(TM) SE Runtime Environment Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12, mixed mode, sharing)
+....................................................................................
+				Java Apps on GraalVM
+.....................................................................................
+
+1.JVM Mode
+  Running regular java apps on GraalVM using Graal Compiler by default
+2.Native mode
+   Converting java .class file/jar file/module file into native image and run.
+3.Running java or js or python apps on Truffle Runtime(VM)
+
+
+1.How to understand that JDK supports graal compiler or JVMCI?
+
+jdk.internal.vm:
+  It is a module  which provides JVMCI compiler interface and graal compiler
+
+list-modsubu@LAPTOP-R2TGGFDL:~$ java --list-modules | grep jdk.internal.vm
+jdk.internal.vm.ci@17.0.7
+jdk.internal.vm.compiler
+jdk.internal.vm.compiler.management
+jdk.internal.vm.compiler.truffle.jfr
+
+ java --describe-module jdk.internal.vm.ci
+jdk.internal.vm.ci@17.0.7
+requires java.base mandated
+uses jdk.vm.ci.services.JVMCIServiceLocator
+uses jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory
+provides jdk.vm.ci.hotspot.HotSpotJVMCIBackendFactory with jdk.vm.ci.hotspot.aarch64.AArch64HotSpotJVMCIBackendFactory jdk.vm.ci.hotspot.amd64.AMD64HotSpotJVMCIBackendFactory
+qualified exports jdk.vm.ci.hotspot to jdk.internal.vm.compiler
+qualified exports jdk.vm.ci.meta to jdk.internal.vm.compiler
+qualified exports jdk.vm.ci.runtime to jdk.internal.vm.compiler.management jdk.internal.vm.compiler
+qualified exports jdk.vm.ci.services to jdk.internal.vm.compiler.management jdk.internal.vm.compiler
+qualified exports jdk.vm.ci.code to jdk.internal.vm.compiler
+contains jdk.vm.ci.aarch64
+contains jdk.vm.ci.amd64
+contains jdk.vm.ci.code.site
+contains jdk.vm.ci.code.stack
+contains jdk.vm.ci.common
+contains jdk.vm.ci.hotspot.aarch64
+contains jdk.vm.ci.hotspot.amd64
+.....................................................................................
+			GraalVM Distribution mode
+
+1.Enterprise 
+ https://www.oracle.com/tools/technologies/graalvm-enterprise-edition.html
+ Enterprise edition is built on the JVM , but offers support,more tooling in production...
+
+2.Community
+ https://www.graalvm.org/downloads/#
+They dont offer live support, less tooling ....
+
+
+Select graal compiler 
+
+-Dgraal.CompilerConfiguration=<name>:
+
+ Selects the Graal compiler configuration to use. If omitted, the compiler configuration with the highest auto-selection priority is used. To see the set of available configurations, supply the value help to this option.
+
+The current configurations and their semantics are:
+
+enterprise: To produce highly optimized code with a possible trade-off to compilation time. [Oracle GraalVM]
+
+community: To produce reasonably optimized code with a faster compilation time.
+
+economy: To compile as fast as possible with less optimal throughput of the generated code.
+
+-Dgraal.ShowConfiguration=none: 
+
+   Prints information about the Graal compiler configuration selected. This option only produces output when the compiler is initialized. 
+
+By default, the Graal compiler is initialized on the first top-tier compilation. For this reason, the way to use this option is as follows: 
+
+eg:
+java -XX:+EagerJVMCI -Dgraal.ShowConfiguration=info -version
+
+[Use -Dgraal.LogFile=<path> to redirect Graal log output to a file.]
+Using "Graal Enterprise compiler with Truffle extensions" loaded from a PGO optimized Native Image shared library
+java version "17.0.7" 2023-04-18 LTS
+Java(TM) SE Runtime Environment Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12, mixed mode, sharing)
+
+By default "Graal Enterprise compiler" is used.
+
+suppose if you want to use "Graal Community compiler"
+
+java -XX:+EagerJVMCI -Dgraal.CompilerConfiguration=community -Dgraal.ShowConfiguration=info -version
+
+
+
+subu@LAPTOP-R2TGGFDL:~$ java -XX:+EagerJVMCI -Dgraal.ShowConfiguration=info -version
+[Use -Dgraal.LogFile=<path> to redirect Graal log output to a file.]
+Using "Graal Enterprise compiler with Truffle extensions" loaded from a PGO optimized Native Image shared library
+java version "17.0.7" 2023-04-18 LTS
+Java(TM) SE Runtime Environment Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12, mixed mode, sharing)
+
+
+subu@LAPTOP-R2TGGFDL:~$ java -XX:+EagerJVMCI  -Dgraal.CompilerConfiguration=community    -Dgraal.ShowConfiguration=info -version
+[Use -Dgraal.LogFile=<path> to redirect Graal log output to a file.]
+Using "Graal Community compiler with Truffle extensions" loaded from a PGO optimized Native Image shared library
+java version "17.0.7" 2023-04-18 LTS
+Java(TM) SE Runtime Environment Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12, mixed mode, sharing)
+
+
+
+subu@LAPTOP-R2TGGFDL:~$ java -XX:+EagerJVMCI  -Dgraal.CompilerConfiguration=economy    -Dgraal.ShowConfiguration=info -version
+[Use -Dgraal.LogFile=<path> to redirect Graal log output to a file.]
+Using "Graal Enterprise Economy compiler" loaded from a PGO optimized Native Image shared library
+java version "17.0.7" 2023-04-18 LTS
+Java(TM) SE Runtime Environment Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12)
+Java HotSpot(TM) 64-Bit Server VM Oracle GraalVM 17.0.7+8.1 (build 17.0.7+8-LTS-jvmci-23.0-b12, mixed mode, sharing)
+s
+.....................................................................................
+				Coding
+.....................................................................................
+
+How to compile java code on Graalvm using "graal compiler".
+
+myapp
+   |
+   -HelloWord.java
+
+HelloWorld.java
+public class HelloWorld{
+    public static void main(String args[]){
+        System.out.println("Hello,Graal");
+    }
+}
+javac HelloWorld.java
+
+java HelloWorld
+Hello,Graal
+.....................................................................................
+			How to enable and disable graal compiler
+
+In regular jdk distributions the default compiler is "C2" we can enable Graal compiler using options but in "GraalVM" default compiler is "graal".
+
+How to compile with package
+
+package com.hello;
+
+public class Graal {
+    public static void main(String[] args) {
+         System.out.println("hello graal");
+    }
+}
+
+$JAVA_HOME/bin/javac -d build src/com/hello/Graal.java
+$JAVA_HOME/bin/java -cp ./build com.hello.Graal
+hello graal
+
+How to run jar file?
+
+$JAVA_HOME/bin/jar cfvm Hello.jar manifest.txt -C build .
+
+$JAVA_HOME/bin/java -jar Hello.jar
+hello graal
+...................................................................................
+			Native Image Technology
+...................................................................................
+
+What is Native Image?
+ Native Image is written in java and takes bytecode as input to produce a standalone binary( an exeuctable, or shared lib).
+
+How to create native image?
+  During the process of producing a binary, native image can run user code, finally nativ image links compiled user code and part of the java runtime(gc,threading)..
+
+ 
+Prerequisites:
+
+The native-image tool, available in the bin directory of your GraalVM installation, depends on the local toolchain (header files for the C library, glibc-devel, zlib, gcc, and/or libstdc++-static). These dependencies can be installed (if not yet installed) using a package manager on your machine. Choose your operating system to find instructions to meet the prerequisites.
+
+Prerequisites:
+
+The native-image tool, available in the bin directory of your GraalVM installation, depends on the local toolchain (header files for the C library, glibc-devel, zlib, gcc, and/or libstdc++-static).
+
+These dependencies can be installed (if not yet installed) using a package manager on your machine. Choose your operating system to find instructions to meet the prerequisites.
+
+On Oracle Linux use the YUM package manager:
+
+```shell
+$ sudo yum install gcc glibc-devel zlib-devel
+```
+
+Some Linux distributions may additionally require libstdc++-static.
+You can install libstdc++-static if the optional repositories are enabled (_ol7_optional_latest_ on Oracle Linux 7 and _ol8_codeready_builder_ on Oracle Linux 8).
+
+On  Ubuntu Linux use the `apt-get` package manager:
+
+$ sudo apt-get install build-essential libz-dev zlib1g-dev
+
+On other Linux distributions use the DNF package manager:
+
+$ sudo dnf install gcc glibc-devel zlib-devel libstdc++-static
+
+Ubuntu:
+......
+sudo apt-get install build-essential libz-dev zlib1g-dev
+...................................................................................
+				Native Image creations
+
+Native images can be created from 
+
+1.Plan java class
+2.existing jar files
+3.existing java modules
+
+Plain java class Native Image construction:
+ native-image HelloWorld
+========================================================================================================================
+GraalVM Native Image: Generating 'helloworld' (executable)...
+========================================================================================================================
+[1/8] Initializing...                                                                                    (4.6s @ 0.17GB)
+ Java version: 17.0.7+8-LTS, vendor version: Oracle GraalVM 17.0.7+8.1
+ Graal compiler: optimization level: 2, target machine: x86-64-v3, PGO: ML-inferred
+ C compiler: gcc (linux, x86_64, 9.4.0)
+ Garbage collector: Serial GC (max heap size: 80% of RAM)
+[2/8] Performing analysis...  [****]                                                                     (5.5s @ 0.27GB)
+   1,847 (59.07%) of  3,127 types reachable
+   1,737 (46.37%) of  3,746 fields reachable
+   7,701 (35.59%) of 21,639 methods reachable
+     632 types,     0 fields, and   276 methods registered for reflection
+      49 types,    32 fields, and    48 methods registered for JNI access
+       4 native libraries: dl, pthread, rt, z
+[3/8] Building universe...                                                                               (0.9s @ 0.28GB)
+[4/8] Parsing methods...      [*]                                                                        (1.8s @ 0.33GB)
+[5/8] Inlining methods...     [***]                                                                      (0.6s @ 0.31GB)
+[6/8] Compiling methods...    [****]                                                                    (18.4s @ 0.43GB)
+[7/8] Layouting methods...    [*]                                                                        (0.7s @ 0.46GB)
+[8/8] Creating image...       [*]                                                                        (1.8s @ 0.45GB)
+   2.75MB (42.09%) for code area:     3,479 compilation units
+   3.46MB (52.97%) for image heap:   48,874 objects and 1 resources
+ 330.29kB ( 4.93%) for other data
+   6.54MB in total
+------------------------------------------------------------------------------------------------------------------------
+Top 10 origins of code area:                                Top 10 object types in image heap:
+   1.44MB java.base                                          548.40kB byte[] for code metadata
+   1.13MB svm.jar (Native Image)                             414.42kB byte[] for java.lang.String
+  68.67kB com.oracle.svm.svm_enterprise                      325.22kB java.lang.String
+  33.89kB org.graalvm.nativeimage.base                       303.49kB java.lang.Class
+  30.23kB org.graalvm.sdk                                    253.28kB byte[] for general heap data
+  18.95kB jdk.internal.vm.ci                                 149.47kB java.util.HashMap$Node
+  14.10kB jdk.internal.vm.compiler                           111.71kB char[]
+   1.17kB jdk.proxy3                                          78.90kB java.lang.Object[]
+   1.15kB jdk.proxy1                                          72.15kB com.oracle.svm.core.hub.DynamicHubCompanion
+  360.00B jdk.proxy2                                          69.98kB byte[] for reflection metadata
+   54.00B for 1 more packages                                436.75kB for 506 more object types
+------------------------------------------------------------------------------------------------------------------------
+Recommendations:
+ G1GC: Use the G1 GC ('--gc=G1') for improved latency and throughput.
+ PGO:  Use Profile-Guided Optimizations ('--pgo') for improved throughput.
+ HEAP: Set max heap for improved and more predictable memory usage.
+ CPU:  Enable more CPU features with '-march=native' for improved performance.
+ QBM:  Use the quick build mode ('-Ob') to speed up builds during development.
+------------------------------------------------------------------------------------------------------------------------
+                        1.0s (2.8% of total time) in 200 GCs | Peak RSS: 1.01GB | CPU load: 8.40
+------------------------------------------------------------------------------------------------------------------------
+Produced artifacts:
+ /home/subu/myapp/helloworld (executable)
+========================================================================================================================
+Finished generating 'helloworld' in 34.9s.
+.......................................................................................................
+
+Native image creation with parameters:
+......................................
+
+native-image --gc=G1  HelloWorld
+
+
+How to run native image?
+
+$./helloworld
+
+Hello,Graal
+........................................................................................................
+				How to create native execuatables from the existing jar
+
+native-image -jar Hello.jar
+========================================================================================================================
+GraalVM Native Image: Generating 'Hello' (executable)...
+========================================================================================================================
+[1/8] Initializing...                                                                                    (4.2s @ 0.17GB)
+ Java version: 17.0.7+8-LTS, vendor version: Oracle GraalVM 17.0.7+8.1
+ Graal compiler: optimization level: 2, target machine: x86-64-v3, PGO: ML-inferred
+ C compiler: gcc (linux, x86_64, 9.4.0)
+ Garbage collector: Serial GC (max heap size: 80% of RAM)
+[2/8] Performing analysis...  [****]                                                                     (5.5s @ 0.27GB)
+   1,847 (59.07%) of  3,127 types reachable
+   1,737 (46.37%) of  3,746 fields reachable
+   7,701 (35.59%) of 21,639 methods reachable
+     632 types,     0 fields, and   276 methods registered for reflection
+      49 types,    32 fields, and    48 methods registered for JNI access
+       4 native libraries: dl, pthread, rt, z
+[3/8] Building universe...                                                                               (1.0s @ 0.28GB)
+[4/8] Parsing methods...      [*]                                                                        (1.8s @ 0.33GB)
+[5/8] Inlining methods...     [***]                                                                      (0.6s @ 0.30GB)
+[6/8] Compiling methods...    [****]                                                                    (17.8s @ 0.42GB)
+[7/8] Layouting methods...    [*]                                                                        (0.8s @ 0.45GB)
+[8/8] Creating image...       [*]                                                                        (1.8s @ 0.48GB)
+   2.75MB (42.09%) for code area:     3,479 compilation units
+   3.46MB (52.97%) for image heap:   48,890 objects and 1 resources
+ 330.37kB ( 4.93%) for other data
+   6.54MB in total
+------------------------------------------------------------------------------------------------------------------------
+Top 10 origins of code area:                                Top 10 object types in image heap:
+   1.44MB java.base                                          547.79kB byte[] for code metadata
+   1.13MB svm.jar (Native Image)                             414.42kB byte[] for java.lang.String
+  68.67kB com.oracle.svm.svm_enterprise                      325.22kB java.lang.String
+  33.89kB org.graalvm.nativeimage.base                       289.06kB java.lang.Class
+  30.23kB org.graalvm.sdk                                    253.26kB byte[] for general heap data
+  18.95kB jdk.internal.vm.ci                                 149.84kB java.util.HashMap$Node
+  14.10kB jdk.internal.vm.compiler                           111.71kB char[]
+   1.17kB jdk.proxy3                                          78.90kB java.lang.Object[]
+   1.15kB jdk.proxy1                                          72.15kB com.oracle.svm.core.hub.DynamicHubCompanion
+  360.00B jdk.proxy2                                          69.98kB byte[] for reflection metadata
+   54.00B for 1 more packages                                443.54kB for 506 more object types
+------------------------------------------------------------------------------------------------------------------------
+Recommendations:
+ G1GC: Use the G1 GC ('--gc=G1') for improved latency and throughput.
+ PGO:  Use Profile-Guided Optimizations ('--pgo') for improved throughput.
+ HEAP: Set max heap for improved and more predictable memory usage.
+ CPU:  Enable more CPU features with '-march=native' for improved performance.
+ QBM:  Use the quick build mode ('-Ob') to speed up builds during development.
+------------------------------------------------------------------------------------------------------------------------
+                        1.0s (2.9% of total time) in 195 GCs | Peak RSS: 1.01GB | CPU load: 8.61
+------------------------------------------------------------------------------------------------------------------------
+Produced artifacts:
+ /home/subu/graalvm-demos/hello-graal/Hello (executable)
+========================================================================================================================
+Finished generating 'Hello' in 34.2s.
+
+How to run?
+./Hello
+hello graal
+
+......................................................................................................
+			How to build native executables from a class file,jar using maven
+......................................................................................................
+
+$mvn clean package
+$native-image target/my-app-1.0-SNAPSHOT.jar
+./my-app-1.0-SNAPSHOT
+Hello World!
+.......................................................................................................
+				 Frameworks and native images
+.......................................................................................................
+
+Spring boot supports GraalVM native technolgy to build realtime apps.
+Quarkus is only the framework which supports native image technology to leavarage enterprise /microservices with respect to containers
+
+Spring Boot apps into native image.
+
+pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.0.0</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>benchmark-jibber</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>jibber</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.rednoise</groupId>
+			<artifactId>rita</artifactId>
+			<version>2.4.501</version>
+ 		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+				<version>0.9.21</version>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
+in order to native image we have plugin
+
+<groupId>org.graalvm.buildtools</groupId>
+  <artifactId>native-maven-plugin</artifactId>
+<version>0.9.21</version>
+
+how to create native using using plugin.
+
+mvn native:compile -Pnative
+........................................................................................................
+			Combine JavaScript, Java, Ruby, and R
+				 Polyglot -Truffle
+.......................................................................................................
+
+ GraalVM includes new implementations of JavaScript, Ruby, R and Python. These are written using a new language implementation framework called Truffle that makes it possible to implement language interpreters that are both simple and high performance.
+
+As well as Java, GraalVM includes new implementations of JavaScript, Ruby, R and Python. These are written using a new language implementation framework called Truffle that makes it possible to implement language interpreters that are both simple and high performance. When you write a language interpreter using Truffle, Truffle will automatically use GraalVM on your behalf to give you a JIT compiler for your language. So GraalVM is not only a JIT compiler and ahead-of-time native compiler for Java, it can also be a JIT compiler for JavaScript, Ruby, R and Python.
+
+GraalVM JavaScript Implementation
+GraalVM provides an ECMAScript-compliant runtime to execute JavaScript and Node.js applications. It is fully standard compliant, execute applications with high performance, and provide all benefits from the GraalVM stack, including language interoperability and common tooling. This reference documentation provides information on available JavaScript engine configurations, the Node.js runtime, the javax.script.ScriptEngine implementation, multithreading support details, possible embedding scenarios, and more. To migrate the code previously targeted to the Nashorn or Rhino engines, migration guides are available.
+......................................................................................................
+				Java with Javascript
+.......................................................................................................
+
+How to mix and match of writing java code and js script inside GRAAL VM.
+
+
+in order to run js or any language we need to install its compilers and runtime
+
+Running JavaScript #
+js [options] [filename...] -- [args]
+
+$GRAALVM/bin/gu install nodejs
+
+ gu list
+ComponentId              Version             Component name                Stability                     Origin
+---------------------------------------------------------------------------------------------------------------------------------
+graalvm                  23.0.0              GraalVM Core                  Supported
+icu4j                    23.0.0              ICU4J                         Supported                     gds.oracle.com
+js                       23.0.0              Graal.js                      Supported                     gds.oracle.com
+llvm                     23.0.0              LLVM Runtime Core             Supported                     gds.oracle.com
+llvm-toolchain           23.0.0              LLVM.org toolchain            Supported                     gds.oracle.com
+native-image             23.0.0              Native Image                  Early adopter
+nodejs                   23.0.0              Graal.nodejs                  Supported                     gds.oracle.com
+python                   23.0.0              GraalVM Python                Experimental                  gds.oracle.com
+regex                    23.0.0              TRegex                        Supported                     gds.oracle.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
